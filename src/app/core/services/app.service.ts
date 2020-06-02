@@ -28,9 +28,8 @@ export class AppService {
     params.append('code', code);
 
     let headers = new HttpHeaders({ 'Content-type': 'application/x-www-form-urlencoded; charset=utf-8' });
-//    this._http.post('http://localhost:18080/auth/realms/zdslogic/protocol/openid-connect/token', params.toString(), { headers: headers })
-//${environment.api_url}${path}
-this._http.post(environment.sso_url+'/realms/zdslogic/protocol/openid-connect/token', params.toString(), { headers: headers })
+
+    this._http.post(environment.sso_url+'/realms/zdslogic/protocol/openid-connect/token', params.toString(), { headers: headers })
       .subscribe(
         data => {
           this.saveToken(data);
@@ -59,7 +58,6 @@ this._http.post(environment.sso_url+'/realms/zdslogic/protocol/openid-connect/to
   }
 
   login() {
-//    window.location.href = 'http://localhost:18080/auth/realms/zdslogic/protocol/openid-connect/auth?response_type=code&client_id=' +
       window.location.href = environment.sso_url+'/realms/zdslogic/protocol/openid-connect/auth?response_type=code&client_id=' +
       this.clientId + '&redirect_uri=' + this.redirectUri;
   }
@@ -67,14 +65,7 @@ this._http.post(environment.sso_url+'/realms/zdslogic/protocol/openid-connect/to
   logout() {
     let token = Cookie.get('access_token');
     Cookie.delete('access_token', '/');
-/*
-    let logoutURL = "http://localhost:8080/auth/realms/zdslogic/protocol/openid-connect/logout?id_token_hint="
-      + token
-      + "&post_logout_redirect_uri=" + this.redirectUri;
-*/
-//    let logoutURL ="http://localhost:18080/auth/realms/zdslogic/protocol/openid-connect/logout?redirect_uri="+this.redirectUri;
     let logoutURL =environment.sso_url+'/realms/zdslogic/protocol/openid-connect/logout?redirect_uri='+this.redirectUri;
-
     window.location.href = logoutURL;
   }
 }
