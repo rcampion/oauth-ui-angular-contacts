@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AppService } from './app.service';
 import { Cookie } from 'ng2-cookies';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -12,9 +13,8 @@ import { ErrorHandlerService } from './error-handler.service';
     providedIn: 'root'
 })
 export class ContactsService {
-
     constructor(private http: HttpClient,
-        private errorService: ErrorHandlerService) { }
+                private errorService: ErrorHandlerService) { }
 
     public getData = (route: string) => {
         return this.http.get(this.createCompleteRoute(route, environment.api_url), this.generateHeaders());
@@ -26,7 +26,6 @@ export class ContactsService {
             params.sort = sort.property + ',' + sort.direction;
         }
         return this.http.get<PaginationPage<any>>(this.createCompleteRoute(route, environment.api_url), params);
-        //        return this.http.get(this.createCompleteRoute(route, environment.api_url), params);
     }
 
     public create = (route: string, body) => {
@@ -50,9 +49,9 @@ export class ContactsService {
         return this.http.get(apiUrl, {
             headers: new HttpHeaders(
                 {
-                'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-                'Authorization': 'Bearer ' + Cookie.get('access_token')
-            }),
+                    'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+                    'Authorization': 'Bearer ' + Cookie.get('access_token')
+                }),
 
             params: new HttpParams()
                 .set('filter', filter)
@@ -84,9 +83,9 @@ export class ContactsService {
         return this.http.get(apiUrl, {
             headers: new HttpHeaders(
                 {
-                'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-                'Authorization': 'Bearer ' + Cookie.get('access_token')
-            }),
+                    'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+                    'Authorization': 'Bearer ' + Cookie.get('access_token')
+                }),
             params: new HttpParams()
 
                 .set('search', filter)
@@ -113,8 +112,7 @@ export class ContactsService {
         if (sort != null) {
             paramsx.sort = sort.property + ',' + sort.direction;
         }
-        // const sortTest = 'firstName' + '\&' + 'firstName.dir=desc';
-        // const sortTestEncoded = encodeURIComponent(sortTest);
+
         let sortTest = sort.direction;
         if (sort.property !== '') {
             sortTest = sort.property + ',' + sort.direction;
@@ -130,9 +128,9 @@ export class ContactsService {
         return this.http.get(apiUrl, {
             headers: new HttpHeaders(
                 {
-                'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-                'Authorization': 'Bearer ' + Cookie.get('access_token')
-            }),
+                    'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+                    'Authorization': 'Bearer ' + Cookie.get('access_token')
+                }),
 
             params: new HttpParams()
                 .set('search', search)
@@ -172,9 +170,9 @@ export class ContactsService {
         return this.http.get(apiUrl, {
             headers: new HttpHeaders(
                 {
-                'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-                'Authorization': 'Bearer ' + Cookie.get('access_token')
-            }),
+                    'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+                    'Authorization': 'Bearer ' + Cookie.get('access_token')
+                }),
             params: new HttpParams()
                 .set('search', search)
                 .set('sort', sortTest)

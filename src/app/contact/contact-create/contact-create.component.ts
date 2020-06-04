@@ -1,4 +1,5 @@
 import { ContactsService } from '../../core/services/contacts.service';
+import { PostService } from '../../core/services/post.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -17,7 +18,7 @@ export class ContactCreateComponent implements OnInit {
     private dialogConfig;
 
     // tslint:disable-next-line:max-line-length
-    constructor(private location: Location, private repository: ContactsService, private dialog: MatDialog, private errorService: ErrorHandlerService) { }
+    constructor(private location: Location, private postService: PostService, private repository: ContactsService, private dialog: MatDialog, private errorService: ErrorHandlerService) { }
 
     ngOnInit() {
         this.contactForm = new FormGroup({
@@ -63,6 +64,7 @@ export class ContactCreateComponent implements OnInit {
         };
 
         const apiUrl = 'contact';
+        let id = 0;
         this.repository.create(apiUrl, contact)
             .subscribe(res => {
                 const dialogRef = this.dialog.open(SuccessDialogComponent, this.dialogConfig);
@@ -78,6 +80,9 @@ export class ContactCreateComponent implements OnInit {
                     this.errorService.handleError(error);
                 })
             );
+
+        this.postService.save({...contact, id: '1'});
+
     }
 
 }

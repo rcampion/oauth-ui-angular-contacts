@@ -1,4 +1,3 @@
-
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
 import { Contact } from '../interface/contact.model';
@@ -6,7 +5,6 @@ import { ContactsService } from './contacts.service';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { PaginationPropertySort } from '../interface/pagination';
 import { ErrorHandlerService } from './error-handler.service';
 
@@ -21,8 +19,7 @@ export class ContactsDataSource implements DataSource<Contact> {
     public total = 0;
 
     constructor(private contactsService: ContactsService,
-        private errorService: ErrorHandlerService) {
-
+                private errorService: ErrorHandlerService) {
     }
 
     loadContacts(
@@ -48,7 +45,6 @@ export class ContactsDataSource implements DataSource<Contact> {
                 this.total = response.totalElements;
             },
                 error => {
-                    // this.errorService.dialogConfig = { ...this.dialogConfig };
                     this.errorService.handleError(error);
                 }
             );

@@ -35,8 +35,8 @@ export class ContactEmailListComponent implements OnInit, AfterViewInit {
 
     public dataSource = new MatTableDataSource<EMail>();
 
-    @ViewChild(MatSort, {static:false}) sort: MatSort;
-    @ViewChild(MatPaginator, {static:false}) paginator: MatPaginator;
+    @ViewChild(MatSort, {static: false}) sort: MatSort;
+    @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
     currentContact: Contact;
 

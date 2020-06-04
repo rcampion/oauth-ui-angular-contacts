@@ -13,15 +13,15 @@ export class HeaderComponent implements OnInit {
     userService: UsersService;
     @Output() public sidenavToggle = new EventEmitter();
     currentUser: User;
-    constructor(private _service: AppService, userService: UsersService) {
+    constructor(private appService: AppService, userService: UsersService) {
         this.userService = userService;
     }
 
     ngOnInit() {
-        const isLoggedIn = this._service.checkCredentials();
+        const isLoggedIn = this.appService.checkCredentials();
         const i = window.location.href.indexOf('code');
         if (!isLoggedIn && i !== -1) {
-            this._service.retrieveToken(window.location.href.substring(i + 5));
+            this.appService.retrieveToken(window.location.href.substring(i + 5));
         }
 
         this.userService.currentUser.subscribe(
@@ -36,12 +36,12 @@ export class HeaderComponent implements OnInit {
     }
 
     login() {
-        this._service.login();
+        this.appService.login();
 
     }
 
     logout(): void {
-        this._service.logout();
+        this.appService.logout();
         this.userService.logout();
     }
 }

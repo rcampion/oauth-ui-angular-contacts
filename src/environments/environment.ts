@@ -11,7 +11,8 @@ export const environment = {
   redirectUri: 'http://localhost:8089/home',
 // sso_url: 'http://localhost:18080/auth',
   sso_url: 'https://www.zdslogic.com/keycloak/auth',
-  api_url: 'http://localhost:8081/resource-server/api'
+  api_url: 'http://localhost:8081/resource-server/api',
+  ws_url: 'http://localhost:8081/resource-server/live'
 
 };
 
