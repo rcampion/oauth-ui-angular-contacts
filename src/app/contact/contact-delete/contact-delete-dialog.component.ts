@@ -29,6 +29,7 @@ export class ContactDeleteDialogComponent implements OnInit {
 
     ngOnInit() {
     }
+
     public delete() {
         const apiUrl = `contact/${this.id}`;
         this.repository.delete(apiUrl)

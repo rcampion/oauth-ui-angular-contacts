@@ -51,6 +51,8 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
     mysubid1 = 'my-subscription-id-001';
     messages2 : any;
     mysubid2 = 'my-subscription-id-002';
+    messages3 : any;
+    mysubid3 = 'my-subscription-id-003';
 
     private unsubscribeSubject: Subject<void> = new Subject<void>();
 
@@ -80,7 +82,7 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         this.messages2 = this.service
-            .onDelete(this.mysubid2)
+            .onUpdate(this.mysubid2)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe(post => {
 
@@ -88,6 +90,14 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
 
             });
 
+        this.messages3 = this.service
+            .onDelete(this.mysubid3)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe(post => {
+
+                this.dataSource.loadContacts('', '', 'asc', 0, 6);
+
+            });
     }
 
     ngOnDestroy(): void {
@@ -144,7 +154,7 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public redirectToDelete = (id: string) => {
         this.dialogConfig.data = {
-            id: id
+            id
         };
         const dialogRef = this.dialog.open(ContactDeleteDialogComponent, this.dialogConfig)
             .afterClosed().subscribe(result => {

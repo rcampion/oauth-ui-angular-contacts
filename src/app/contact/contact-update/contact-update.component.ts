@@ -7,6 +7,7 @@ import { ContactsService } from '../../core/services/contacts.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuccessDialogComponent } from '../../shared/dialogs/success-dialog/success-dialog.component';
 import { ErrorHandlerService } from '../../core/services/error-handler.service';
+import { PostService } from '../../core/services/post.service';
 
 @Component({
     selector: 'app-contact-update',
@@ -20,9 +21,8 @@ export class ContactUpdateComponent implements OnInit {
     private dialogConfig;
 
     // tslint:disable-next-line:max-line-length
-    constructor(private location: Location, private repository: ContactsService, private dialog: MatDialog,
-        router: Router,
-        private activeRoute: ActivatedRoute, private errorService: ErrorHandlerService) { }
+    constructor(private location: Location, private postService: PostService, private repository: ContactsService, private dialog: MatDialog,
+                private activeRoute: ActivatedRoute, private errorService: ErrorHandlerService) { }
 
 
     ngOnInit() {
@@ -47,6 +47,7 @@ export class ContactUpdateComponent implements OnInit {
 
 
     }
+
     private getContactDetails = () => {
         const id: string = this.activeRoute.snapshot.params['id'];
         const apiUrl = `contact/${id}`;
@@ -68,6 +69,7 @@ export class ContactUpdateComponent implements OnInit {
         this.contactForm.controls['company'].setValue(this.contact.company);
         this.contactForm.controls['title'].setValue(this.contact.title);
     }
+
     public updateContact = (contactFormValue) => {
         if (this.contactForm.valid) {
             this.executeContactUpdate(contactFormValue);
@@ -103,6 +105,8 @@ export class ContactUpdateComponent implements OnInit {
                     this.errorService.handleError(error);
                 })
             );
+
+        this.postService.update('update');
     }
 
     public hasError = (controlName: string, errorName: string) => {
