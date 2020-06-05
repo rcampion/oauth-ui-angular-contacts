@@ -33,8 +33,10 @@ import { UserContactsSelectionDialogComponent } from './user-contacts/user-conta
 import { ContactDeleteDialogComponent } from './contact/contact-delete/contact-delete-dialog.component';
 import { PasswordComponent } from './password/password.component';
 import { CoreModule } from './core/core.module';
+import { SocketClientService } from './core/socket-client.service';
 
 import { CommonService } from './core/services/common.service';
+
 
 @NgModule({
     declarations: [
@@ -73,7 +75,7 @@ import { CommonService } from './core/services/common.service';
         SharedModule
     ],
     providers: [
-        CommonService, UsersService, RegistrationService, LoginRouteGuard, AuthorizationRouteGuard, AccountEventsService, ErrorService,
+        SocketClientService, CommonService, UsersService, RegistrationService, LoginRouteGuard, AuthorizationRouteGuard, AccountEventsService, ErrorService,
     ],
     bootstrap: [AppComponent, ErrorComponent]
 })

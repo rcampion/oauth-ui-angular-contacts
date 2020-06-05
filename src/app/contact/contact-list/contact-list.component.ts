@@ -47,6 +47,11 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     pageNumber: number;
 
+    messages1 : any;
+    mysubid1 = 'my-subscription-id-001';
+    messages2 : any;
+    mysubid2 = 'my-subscription-id-002';
+
     private unsubscribeSubject: Subject<void> = new Subject<void>();
 
     // tslint:disable-next-line:max-line-length
@@ -65,8 +70,17 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
             data: {}
         };
 
-        this.service
-            .onPost()
+        this.messages1 = this.service
+            .onSave(this.mysubid1)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe(post => {
+
+                this.dataSource.loadContacts('', '', 'asc', 0, 6);
+
+            });
+
+        this.messages2 = this.service
+            .onDelete(this.mysubid2)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe(post => {
 

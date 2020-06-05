@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { Client, Message, over, StompSubscription } from '@stomp/stompjs';
+import { CompatClient, Message, Stomp, StompSubscription } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { environment } from '../../environments/environment';
 import { filter, first, switchMap } from 'rxjs/operators';
@@ -11,66 +11,8 @@ import { SocketClientState } from './socket-client-state';
   providedIn: 'root'
 })
 export class SocketClientService implements OnDestroy {
-  private client: Client;
+  static client: CompatClient;
   private state: BehaviorSubject<SocketClientState>;
-
-  constructor() {
-/*
-    this.client = over(new SockJS(environment.ws_url));
-    this.state = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
-    this.client.connect({}, () => {
-      this.state.next(SocketClientState.CONNECTED);
-    });
-*/
-  }
-  
-/*
-  connect(): Observable<Client> {
-    return new Observable<Client>(observer => {
-      this.state.pipe(filter(state => state === SocketClientState.CONNECTED)).subscribe(() => {
-        observer.next(this.client);
-      });
-    });
-  }
-*/
-  connect(): Observable<Client> {
-    this.client = over(new SockJS(environment.ws_url));
-    this.state = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
-    this.client.connect({}, () => {
-      this.state.next(SocketClientState.CONNECTED);
-    });
-
-    return new Observable<Client>(observer => {
-      this.state.pipe(filter(state => state === SocketClientState.CONNECTED)).subscribe(() => {
-        observer.next(this.client);
-      });
-    });
-  }
-
-  ngOnDestroy() {
-    this.connect().pipe(first()).subscribe(inst => inst.disconnect(null));
-  }
-
-  onMessage(topic: string, handler = SocketClientService.jsonHandler): Observable<any> {
-    return this.connect().pipe(first(), switchMap(inst => {
-      return new Observable<any>(observer => {
-        const subscription: StompSubscription = inst.subscribe(topic, message => {
-          observer.next(handler(message));
-        });
-        return () => inst.unsubscribe(subscription.id);
-      });
-    }));
-  }
-
-  onPlainMessage(topic: string): Observable<string> {
-    return this.onMessage(topic, SocketClientService.textHandler);
-  }
-
-  send(topic: string, payload: any): void {
-    this.connect()
-      .pipe(first())
-      .subscribe(inst => inst.send(topic, {}, JSON.stringify(payload)));
-  }
 
   static jsonHandler(message: Message): any {
     return JSON.parse(message.body);
@@ -79,4 +21,79 @@ export class SocketClientService implements OnDestroy {
   static textHandler(message: Message): string {
     return message.body;
   }
+
+  constructor() {
+
+  }
+
+  connect(): Observable<CompatClient> {
+
+    SocketClientService.client = Stomp.over(function () {
+      return new SockJS(environment.ws_url);
+    });
+
+    // Add the following if you need automatic reconnect (delay is in milli seconds)
+    SocketClientService.client.reconnect_delay = 5000;
+
+    this.state = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
+
+    SocketClientService.client.connect({}, () => {
+      this.state.next(SocketClientState.CONNECTED);
+    });
+
+    this.asyncWait();
+
+    return new Observable<CompatClient>(observer => {
+      this.state.pipe(filter(state => state === SocketClientState.CONNECTED)).subscribe(() => {
+        observer.next(SocketClientService.client);
+      });
+    });
+  }
+
+  async asyncWait() {
+    const value = await this.waitForOneSecond();
+    console.log(value);
+  }
+
+  waitForOneSecond() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve('I promise to return after one second!');
+      }, 1000);
+    });
+  }
+
+  ngOnDestroy() {
+    this.connect().pipe(first()).subscribe(inst => inst.disconnect(null));
+  }
+
+  subscribe(destination: string, id: string ): Observable<any> {
+    return new Observable<any>(observer => {
+      const subscription: StompSubscription = SocketClientService.client.subscribe(destination, message => {
+          observer.next(SocketClientService.jsonHandler(message));}, {id});
+    });
+  }
+
+  onMessage(id: string, topic: string, handler = SocketClientService.jsonHandler): Observable<any> {
+    return this.connect().pipe(first(), switchMap(inst => {
+      return new Observable<any>(observer => {
+        const subscription: StompSubscription = inst.subscribe(topic, message => {
+          observer.next(handler(message));
+        }, { id });
+        return () => inst.unsubscribe(subscription.id);
+      });
+    }));
+  }
+
+  onPlainMessage(id: string, topic: string): Observable<string> {
+    return this.onMessage(id, topic, SocketClientService.textHandler);
+  }
+
+  send(topic: string, payload: any): void {
+    this.connect()
+      .pipe(first())
+      .subscribe(inst => inst.send(topic, {}, JSON.stringify(payload)));
+  }
+
+
 }

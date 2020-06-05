@@ -13,6 +13,7 @@ export const environment = {
   sso_url: 'https://www.zdslogic.com/keycloak/auth',
   api_url: 'http://localhost:8081/resource-server/api',
   ws_url: 'http://localhost:8081/resource-server/live'
+  //ws_url: 'ws://localhost:8081/resource-server/live'
 
 };
 

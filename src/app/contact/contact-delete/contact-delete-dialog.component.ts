@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ContactsService } from '../../core/services/contacts.service';
+import { PostService } from '../../core/services/post.service';
 import { ErrorHandlerService } from '../../core/services/error-handler.service';
 
 @Component({
@@ -14,6 +15,8 @@ export class ContactDeleteDialogComponent implements OnInit {
     id: string;
     constructor(
         private repository: ContactsService,
+
+        private postService: PostService,
 
         private errorHandler: ErrorHandlerService,
 
@@ -36,6 +39,8 @@ export class ContactDeleteDialogComponent implements OnInit {
                     this.errorHandler.handleError(error);
                 });
         this.dialogRef.close();
+
+        this.postService.delete(this.id);
 
     }
 
