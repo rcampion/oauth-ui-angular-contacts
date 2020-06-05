@@ -68,8 +68,10 @@ export class SocketClientService implements OnDestroy {
   }
 
   subscribe(destination: string, id: string ): Observable<any> {
+    var client = SocketClientService.client;
     return new Observable<any>(observer => {
-      const subscription: StompSubscription = SocketClientService.client.subscribe(destination, message => {
+      
+      const subscription: StompSubscription = client.subscribe(destination, message => {
           observer.next(SocketClientService.jsonHandler(message));}, {id});
     });
   }
