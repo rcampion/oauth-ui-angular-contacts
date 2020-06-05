@@ -11,7 +11,7 @@ import { SocketClientState } from './socket-client-state';
   providedIn: 'root'
 })
 export class SocketClientService implements OnDestroy {
-  static client: CompatClient;
+  private client: CompatClient;
   private state: BehaviorSubject<SocketClientState>;
 
   static jsonHandler(message: Message): any {
@@ -28,16 +28,16 @@ export class SocketClientService implements OnDestroy {
 
   connect(): Observable<CompatClient> {
 
-    SocketClientService.client = Stomp.over(function () {
+    this.client = Stomp.over(function () {
       return new SockJS(environment.ws_url);
     });
 
     // Add the following if you need automatic reconnect (delay is in milli seconds)
-    SocketClientService.client.reconnect_delay = 5000;
+    this.client.reconnect_delay = 5000;
 
     this.state = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
 
-    SocketClientService.client.connect({}, () => {
+    this.client.connect({}, () => {
       this.state.next(SocketClientState.CONNECTED);
     });
 
@@ -45,7 +45,7 @@ export class SocketClientService implements OnDestroy {
 
     return new Observable<CompatClient>(observer => {
       this.state.pipe(filter(state => state === SocketClientState.CONNECTED)).subscribe(() => {
-        observer.next(SocketClientService.client);
+        observer.next(this.client);
       });
     });
   }
@@ -68,9 +68,8 @@ export class SocketClientService implements OnDestroy {
   }
 
   subscribe(destination: string, id: string ): Observable<any> {
-    var client = SocketClientService.client;
+    var client = this.client;
     return new Observable<any>(observer => {
-      
       const subscription: StompSubscription = client.subscribe(destination, message => {
           observer.next(SocketClientService.jsonHandler(message));}, {id});
     });
