@@ -21,4 +21,4 @@ Demonstrates Security.
 
 Using Keycloak for SSO.
 
-Using WebSockets.
+Using WebSockets for CRUD transactions to keep browsers in synch.
