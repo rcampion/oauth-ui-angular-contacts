@@ -79,6 +79,7 @@ export class AppService {
   logout() {
     let token = Cookie.get('access_token');
     Cookie.delete('access_token', '/');
+    this.userService.purgeAuth();
     let logoutURL = environment.sso_url + '/realms/zdslogic/protocol/openid-connect/logout?redirect_uri=' + this.redirectUri;
     window.location.href = logoutURL;
   }
