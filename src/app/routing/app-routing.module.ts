@@ -28,8 +28,41 @@ const routes: Routes = [
     { path: 'settings',
         loadChildren: () => import("./../settings/settings.module").then(m => m.SettingsModule), canActivate: [LoginRouteGuard]},
     { path: 'profile',
-        loadChildren: () => import("./../profile/profile.module").then(m => m.ProfileModule), canActivate: [LoginRouteGuard]}
-];
+        loadChildren: () => import("./../profile/profile.module").then(m => m.ProfileModule), canActivate: [LoginRouteGuard]},
+    {
+        path: 'dashboard',
+        component: AboutComponent,
+        resolve: {
+            url: 'externalUrlRedirectResolver'
+        },
+        data: {
+            externalUrl: 'https://www.zdslogic.com/dashboard'
+        }
+    },
+    {
+        path: 'logs',
+        component: AboutComponent,
+        resolve: {
+            url: 'externalUrlRedirectResolver'
+        },
+        data: {
+            externalUrl: 'https://www.zdslogic.com/dashboard/log/logs'
+        }
+    },
+    {
+        path: 'whois',
+        component: AboutComponent,
+        resolve: {
+            url: 'externalUrlRedirectResolver'
+        },
+        data: {
+            externalUrl: 'https://www.zdslogic.com/dashboard/whois'
+        }
+    },
+
+
+
+    ];
 
 @NgModule({
     imports: [
