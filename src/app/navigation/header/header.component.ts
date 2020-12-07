@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
     }
 
     login() {
-        // this.userService.purgeAuth();
+        this.logout();
         this.appService.login();
 
     }
