@@ -36,7 +36,7 @@ const routes: Routes = [
             url: 'externalUrlRedirectResolver'
         },
         data: {
-            externalUrl: 'https://www.zdslogic.com/dashboard'
+            externalUrl: 'https://www.zdslogic.com'
         }
     },
     {
@@ -46,7 +46,7 @@ const routes: Routes = [
             url: 'externalUrlRedirectResolver'
         },
         data: {
-            externalUrl: 'https://www.zdslogic.com/dashboard/log/logs'
+            externalUrl: 'https://www.zdslogic.com/log/logs'
         }
     },
     {
@@ -56,11 +56,9 @@ const routes: Routes = [
             url: 'externalUrlRedirectResolver'
         },
         data: {
-            externalUrl: 'https://www.zdslogic.com/dashboard/whois'
+            externalUrl: 'https://www.zdslogic.com//whois'
         }
     },
-
-
 
     ];
 
