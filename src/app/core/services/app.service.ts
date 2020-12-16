@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Cookie } from 'ng2-cookies';
 import { HttpClient, HttpHeaders, HttpBackend } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { UsersService } from '../../core/services/users.service';
-import { SocketClientService } from '../../core/socket-client.service';
+import { SocketClientService } from '../../core/services/socket-client.service';
 import { environment } from '../../../environments/environment';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, takeUntil } from 'rxjs/operators';
 import { Contact } from '../interface/contact.model';
+import { AuthenticationService } from './authentication.service';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +20,24 @@ export class AppService {
   private http: HttpClient;
   private userService: UsersService;
   private dataService: SocketClientService;
+  private authService: AuthenticationService;
+
+  currentUser: User;
+
+  messages9: any;
+  mysubid9 = 'my-subscription-id-009';
+
+  private unsubscribeSubject: Subject<void> = new Subject<void>();
 
   constructor(private handler: HttpBackend,
     userService: UsersService,
-    dataService: SocketClientService) {
+    dataService: SocketClientService,
+    authService: AuthenticationService) {
 
     this.http = new HttpClient(handler);
     this.userService = userService;
     this.dataService = dataService;
+    this.authService = authService;
   }
 
   retrieveToken(code) {
@@ -43,8 +55,34 @@ export class AppService {
       .subscribe(
         data => {
           this.saveToken(data);
+
           this.userService.loginViaSSO();
+
           this.connectWebSocket();
+
+          this.dataService.connect().subscribe(res => {
+            console.log(res);
+
+            this.messages9 = this.authService
+              .onUpdate(this.mysubid9)
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe(post => {
+
+                // this.dataSource.loadLogs('', '', 'asc', 0, 6);
+
+                // this.dataSource.refresh(post);
+
+                console.log(post);
+
+              });
+
+          });
+
+          //          this.userService.loginViaSSO().subscribe(user => {
+          //            this.authService.save({ ...user, id: '1' });
+          //          });
+
+          //this.service.save({ ...data, id: '1' });
         },
         err => alert(err + '\nInvalid Credentials')
       );
@@ -52,6 +90,7 @@ export class AppService {
 
   connectWebSocket() {
     this.dataService.connect();
+    //this.authService.connect();
   }
 
   saveToken(token) {
@@ -80,7 +119,7 @@ export class AppService {
     let token = Cookie.get('access_token');
     Cookie.delete('access_token', '/');
     this.userService.purgeAuth();
-    let logoutURL = environment.sso_url + '/realms/zdslogic/protocol/openid-connect/logout?redirect_uri=' + this.redirectUri;
-    window.location.href = logoutURL;
+    //let logoutURL = environment.sso_url + '/realms/zdslogic/protocol/openid-connect/logout?redirect_uri=' + this.redirectUri;
+    //window.location.href = logoutURL;
   }
 }
