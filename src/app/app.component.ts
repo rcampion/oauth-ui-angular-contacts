@@ -7,6 +7,7 @@ import { AppService } from './core/services/app.service';
 import { UsersService } from './core/services/users.service';
 import { SocketClientService } from './core/services/socket-client.service';
 import { AuthenticationService } from './core/services/authentication.service';
+import { DataSharingService } from './core/services/datasharing.service';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +35,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     appService: AppService,
     userService: UsersService,
     dataService: SocketClientService,
-    authService: AuthenticationService) {
+    authService: AuthenticationService,
+    private dataSharingService: DataSharingService) {
 
     this.appService = appService;
     this.userService = userService;
@@ -71,12 +73,26 @@ export class AppComponent implements OnInit, AfterViewInit {
 
             this.userService.getUserViaSSO();
 
-            window.location.reload();
+            // window.location.reload();
+/*
+            this.href = this.router.url;
+
+            this.router.navigateByUrl('/header', { skipLocationChange: true }).then(() => {
+              this.router.navigate([this.href]);
+            });
+*/
+            this.dataSharingService.isUserLoggedIn.next(true);
 
           } else {
+/*
+            // window.location.reload();
+            this.href = this.router.url;
 
-            window.location.reload();
-
+            this.router.navigateByUrl('/header', { skipLocationChange: true }).then(() => {
+              this.router.navigate([this.href]);
+            });
+*/
+            this.dataSharingService.isUserLoggedIn.next(false);
           }
 
         });

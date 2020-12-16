@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { Cookie } from 'ng2-cookies';
 import { HttpClient, HttpHeaders, HttpBackend } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+import { map, catchError, takeUntil } from 'rxjs/operators';
+
 import { UsersService } from '../../core/services/users.service';
 import { SocketClientService } from '../../core/services/socket-client.service';
 import { environment } from '../../../environments/environment';
-import { map, catchError, takeUntil } from 'rxjs/operators';
 import { Contact } from '../interface/contact.model';
 import { AuthenticationService } from './authentication.service';
 import { User } from '../models/user';
+import { DataSharingService } from './datasharing.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +34,8 @@ export class AppService {
   constructor(private handler: HttpBackend,
     userService: UsersService,
     dataService: SocketClientService,
-    authService: AuthenticationService) {
+    authService: AuthenticationService,
+    private dataSharingService: DataSharingService) {
 
     this.http = new HttpClient(handler);
     this.userService = userService;
@@ -58,6 +61,9 @@ export class AppService {
 
           this.userService.loginViaSSO();
 
+          this.dataSharingService.isUserLoggedIn.next(true);
+
+        /*
           this.connectWebSocket();
 
           this.dataService.connect().subscribe(res => {
@@ -77,12 +83,8 @@ export class AppService {
               });
 
           });
+          */
 
-          //          this.userService.loginViaSSO().subscribe(user => {
-          //            this.authService.save({ ...user, id: '1' });
-          //          });
-
-          //this.service.save({ ...data, id: '1' });
         },
         err => alert(err + '\nInvalid Credentials')
       );
@@ -116,9 +118,9 @@ export class AppService {
   }
 
   logout() {
-    let token = Cookie.get('access_token');
     Cookie.delete('access_token', '/');
     this.userService.purgeAuth();
+    this.dataSharingService.isUserLoggedIn.next(false);
     //let logoutURL = environment.sso_url + '/realms/zdslogic/protocol/openid-connect/logout?redirect_uri=' + this.redirectUri;
     //window.location.href = logoutURL;
   }

@@ -37,7 +37,7 @@ import { CoreModule } from './core/core.module';
 
 import { CommonService } from './core/services/common.service';
 import { SocketClientService } from './core/services/socket-client.service';
-
+import { DataSharingService } from './core/services/datasharing.service';
 
 @NgModule({
     declarations: [
@@ -87,6 +87,7 @@ import { SocketClientService } from './core/services/socket-client.service';
             window.open(url, '_blank');
         }
     },
+        DataSharingService,
         SocketClientService,
         CommonService, UsersService,
         RegistrationService,
