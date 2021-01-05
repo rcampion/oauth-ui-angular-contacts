@@ -33,6 +33,13 @@
           <mat-error *ngIf="hasError('title', 'maxlength')">You have more than 60 characters</mat-error>
         </mat-form-field>
 
+        <div *ngIf="userService.isUserAuthorized(['ROLE_ADMIN'])"> 
+          <mat-form-field>
+            <input matInput type="text" placeholder="User Id"
+              formControlName="userId" id="userId">
+          </mat-form-field>
+        </div>
+        
       </mat-card-content>
       <mat-card-actions align="center">
         <button mat-raised-button color="primary" [disabled]="!contactForm.valid">Update</button>

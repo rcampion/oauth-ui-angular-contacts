@@ -16,10 +16,12 @@ export const environment = {
   redirectUri: 'http://localhost:4200/about',
 //  sso_url: 'http://localhost:18080/auth',
   sso_url: 'https://www.zdslogic.com/keycloak/auth',
-  api_url: 'http://localhost:8085/dashboard-server/api',
+//  api_url: 'http://localhost:8085/dashboard-server/api',
 // api_url: 'https://www.zdslogic.com/dashboard-server/api',
-  ws_url: 'http://localhost:8085/dashboard-server/live'
-//ws_url: 'https://www.zdslogic.com/dashboard-server/live'
+  api_url: 'http://localhost:8081/resource-server/api',
+//  ws_url: 'http://localhost:8085/dashboard-server/live'
+//  ws_url: 'https://www.zdslogic.com/dashboard-server/live'
+  ws_url: 'http://localhost:8081/resource-server/live'
 };
 
 /*
