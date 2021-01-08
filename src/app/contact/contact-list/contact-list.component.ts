@@ -47,12 +47,12 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     pageNumber: number;
 
-    messages1 : any;
-    mysubid1 = 'my-subscription-id-001';
-    messages2 : any;
-    mysubid2 = 'my-subscription-id-002';
-    messages3 : any;
-    mysubid3 = 'my-subscription-id-003';
+    messages31 : any;
+    mysubid31 = 'my-subscription-id-031';
+    messages32 : any;
+    mysubid32 = 'my-subscription-id-032';
+    messages33 : any;
+    mysubid33 = 'my-subscription-id-033';
 
     private unsubscribeSubject: Subject<void> = new Subject<void>();
 
@@ -72,8 +72,8 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
             data: {}
         };
 
-        this.messages1 = this.service
-            .onSave(this.mysubid1)
+        this.messages31 = this.service
+            .onSave(this.mysubid31)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe(post => {
 
@@ -81,8 +81,8 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
 
             });
 
-        this.messages2 = this.service
-            .onUpdate(this.mysubid2)
+        this.messages32 = this.service
+            .onUpdate(this.mysubid32)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe(post => {
 
@@ -90,8 +90,8 @@ export class ContactListComponent implements OnInit, AfterViewInit, OnDestroy {
 
             });
 
-        this.messages3 = this.service
-            .onDelete(this.mysubid3)
+        this.messages33 = this.service
+            .onDelete(this.mysubid33)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe(post => {
 

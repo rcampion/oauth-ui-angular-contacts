@@ -24,11 +24,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
     isUserLoggedIn: boolean = false;
 
-    messages9: any;
-    mysubid9 = 'my-subscription-id-009';
-
-    private unsubscribeSubject: Subject<void> = new Subject<void>();
-
     constructor(
         private router: Router,
         private appService: AppService,
@@ -45,21 +40,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isUserLoggedIn = value;
         });
 
-        /*
-        this.router.routeReuseStrategy.shouldReuseRoute = function () {
-            return false;
-        };
-
-        this.mySubscription = this.router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                // Trick the Router into believing it's last link wasn't previously loaded
-                this.router.navigated = false;
-            }
-        });
-        */
     }
-
-
 
     ngOnInit() {
         const isLoggedIn = this.appService.checkCredentials();
@@ -75,7 +56,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 this.currentUser = userData;
 
-                // this.service.save({ ...this.currentUser, id: '1' });
             }
         );
     }

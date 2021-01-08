@@ -29,8 +29,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   sessionUser: User;
   currentUser: User;
 
-  messages9: any;
-  mysubid9 = 'my-subscription-id-009';
+  messages39: any;
+  mysubid39 = 'my-subscription-id-039';
 
   private unsubscribeSubject: Subject<void> = new Subject<void>();
 
@@ -68,8 +68,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.dataService.connect().subscribe(res => {
       console.log(res);
 
-      this.messages9 = this.authService
-        .onUpdate(this.mysubid9)
+      this.messages39 = this.authService
+        .onUpdate(this.mysubid39)
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(post => {
           if (post.message === 'Session Expired') {
@@ -89,25 +89,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
             this.userService.getUserViaSSO();
 
-            // window.location.reload();
-            /*
-                        this.href = this.router.url;
-            
-                        this.router.navigateByUrl('/header', { skipLocationChange: true }).then(() => {
-                          this.router.navigate([this.href]);
-                        });
-            */
             this.dataSharingService.isUserLoggedIn.next(true);
 
           } else {
-            /*
-                        // window.location.reload();
-                        this.href = this.router.url;
-            
-                        this.router.navigateByUrl('/header', { skipLocationChange: true }).then(() => {
-                          this.router.navigate([this.href]);
-                        });
-            */
+
             this.dataSharingService.isUserLoggedIn.next(false);
           }
 
@@ -122,7 +107,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   connectWebSocket() {
     this.dataService.connect();
-    //this.authService.connect();
   }
 
   getDate() {
