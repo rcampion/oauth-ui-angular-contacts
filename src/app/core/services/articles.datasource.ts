@@ -1,50 +1,59 @@
 
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
-import { Contact } from '../interface/contact.model';
-import { ContactsService } from './contacts.service';
+import { Article } from '../models/article.model';
+import { ArticleListConfig } from '../../core';
+import { ArticlesService } from './articles.service';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { PaginationPropertySort } from '../interface/pagination';
 import { ErrorHandlerService } from './error-handler.service';
 
-export class ContactsDataSource implements DataSource<Contact> {
+export class ArticlesDataSource implements DataSource<Article> {
 
-    private contactsSubject = new BehaviorSubject<Contact[]>([]);
+    private articlesSubject = new BehaviorSubject<Article[]>([]);
 
     private loadingSubject = new BehaviorSubject<boolean>(false);
 
     public loading$ = this.loadingSubject.asObservable();
 
+    articles: Article[];
+
     public total = 0;
 
-    constructor(private contactsService: ContactsService,
+    constructor(private articlesService: ArticlesService,
         private errorService: ErrorHandlerService) {
-
     }
 
-    loadContacts(
-        filter: string,
+    getArticles(){
+		return this.articles;
+    }
+
+    loadArticles(
+        // filter: string,
         sortProperty: string,
         sortDirection: string,
         pageIndex: number,
-        pageSize: number) {
+        pageSize: number,
+        config:ArticleListConfig) {
 
         this.loadingSubject.next(true);
 
         const sort = new PaginationPropertySort();
         sort.property = sortProperty;
         sort.direction = sortDirection;
+        const filter: string = '';
 
-        this.contactsService.findContactsWithSortAndFilter(filter, sort,
-            pageIndex, pageSize).pipe(
-                catchError(() => of([])),
-                finalize(() => this.loadingSubject.next(false))
+        this.articlesService.findArticlesWithSortAndFilter(filter, sort,
+            pageIndex, pageSize, config).pipe(
+                catchError((error) => of(this.errorService.handleError(error))),
+                finalize(() =>
+					this.loadingSubject.next(false))
             )
             .subscribe(response => {
-                this.contactsSubject.next(response.content);
+				this.articlesSubject.next(response.content);
+				this.articles = response.content;
                 this.total = response.totalElements;
             },
                 error => {
@@ -54,13 +63,13 @@ export class ContactsDataSource implements DataSource<Contact> {
             );
     }
 
-    connect(collectionViewer: CollectionViewer): Observable<Contact[]> {
+    connect(collectionViewer: CollectionViewer): Observable<Article[]> {
         console.log('Connecting data source');
-        return this.contactsSubject.asObservable();
+        return this.articlesSubject.asObservable();
     }
 
     disconnect(collectionViewer: CollectionViewer): void {
-        this.contactsSubject.complete();
+        this.articlesSubject.complete();
         this.loadingSubject.complete();
     }
 

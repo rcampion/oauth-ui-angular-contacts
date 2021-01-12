@@ -29,7 +29,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     request = request.clone({
-      withCredentials: true
+      withCredentials: false
   });
   return next.handle(request);
   }

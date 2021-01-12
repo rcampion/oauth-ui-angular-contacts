@@ -27,7 +27,7 @@
     "@ngrx/router-store": "^9.2.0",
     "@ngrx/store": "^9.2.0",
     "@ngrx/store-devtools": "^9.2.0",
-    "@stomp/stompjs": "^5.4.4",
+    "@stomp/stompjs": "^6.0.0",
     "@types/sockjs-client": "^1.1.1",
     "chart.js": "^2.9.3",
     "marked": "^1.1.0",

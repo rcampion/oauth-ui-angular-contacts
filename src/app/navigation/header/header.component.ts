@@ -39,8 +39,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.dataSharingService.isUserLoggedIn.subscribe(value => {
             this.isUserLoggedIn = value;
         });
-
     }
+
+
 
     ngOnInit() {
         const isLoggedIn = this.appService.checkCredentials();
